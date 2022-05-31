@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FullPost } from '../../data/posts'
 import { usePostData } from '../../data/dataContext'
 import { Loading } from '../../components/loading'
@@ -6,6 +6,7 @@ import { NotFound } from '../../components/notFound'
 import { useParams } from 'react-router-dom'
 import { PostDetail } from '../../components/postDetail'
 import { MainFrame } from '../../components/mainFrame'
+import { useUserContext } from '../../components/contexts/userContext'
 
 export type PostPageParams = {
   postId: string
@@ -25,12 +26,13 @@ type PostPageState =
 
 export const PostPage = () => {
   const {postId} = useParams<PostPageParams>()
+  const user = useUserContext()
 
   const postData = usePostData()
 
   const [state, setState] = useState<PostPageState>({loadingState: 'loading'})
 
-  useEffect(() => {
+  const loadPost = useCallback(() => {
     if (postId === undefined)
       setState({loadingState: 'post-not-found'})
     else
@@ -40,7 +42,17 @@ export const PostPage = () => {
         else
           setState({loadingState: 'loaded', post})
       })
-  }, [])
+  }, [state, postId])
+
+  useEffect(() => loadPost(), [])
+
+  const handlePostAnswer = useCallback((postText: string) => {
+    if (state.loadingState === 'loaded') {
+      postData.answerPost(state.post.id, {user, text: postText})
+        .then(() => loadPost())
+        .catch(error => console.error('Error while creating new post', error))
+    }
+  }, [state, postData])
 
   const content = useMemo(() => {
     switch (state.loadingState) {
@@ -51,7 +63,7 @@ export const PostPage = () => {
       case 'loaded':
         const {post} = state
         return (
-          <PostDetail post={post}/>
+          <PostDetail post={post} onPostAnswer={handlePostAnswer}/>
         )
     }
   }, [state])

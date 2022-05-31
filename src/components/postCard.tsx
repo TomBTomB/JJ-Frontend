@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 
 export type PostCardProps = {
   post: Post
-  cardSx?: SxProps<Theme>
+  sx?: SxProps<Theme>
   shouldNavigate?: boolean
 }
 
@@ -15,13 +15,13 @@ const cardStyle: SxProps<Theme> = {
   margin: '10px',
 }
 
-export const PostCard = ({post, cardSx, shouldNavigate = false}: PostCardProps) => {
+export const PostCard = ({post, sx, shouldNavigate = false}: PostCardProps) => {
   const navigate = useNavigate()
 
   const {text, user} = post
   const {displayName, username, avatar} = user
 
-  const mergedCardStyle = {...cardStyle, ...cardSx}
+  const mergedCardStyle = {...cardStyle, ...sx}
 
   const handleClick = useCallback(() => {
     if (shouldNavigate)

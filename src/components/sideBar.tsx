@@ -1,15 +1,22 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { Home, Person } from '@mui/icons-material'
 import Toolbar from '@mui/material/Toolbar'
-
+import Typography from '@mui/material/Typography'
+import { useNavigate } from 'react-router-dom'
 
 export type SideBarProps = {
   mobileOpen: boolean
   onSideBarToggle: () => void
 }
 
-const items = [
+export type ItemProps = {
+  title: string,
+  path: string,
+  iconComponent: React.ComponentType,
+}
+
+const items: ItemProps[] = [
   {
     title: 'Home',
     path: '/',
@@ -24,24 +31,35 @@ const items = [
 
 const drawerWidth = 240
 
+const SideBarItem = ({path, title, iconComponent}: ItemProps) => {
+  const Icon = iconComponent
+  const navigate = useNavigate()
+
+  const handleClick = useCallback(() => navigate(path), [path])
+
+  return (
+    <ListItem key={path} disablePadding onClick={handleClick}>
+      <ListItemButton>
+        <ListItemIcon>
+          <Icon/>
+        </ListItemIcon>
+        <ListItemText primary={title}/>
+      </ListItemButton>
+    </ListItem>
+  )
+
+}
+
 export const SideBar = ({mobileOpen, onSideBarToggle}: SideBarProps) => {
   const drawer = (
     <>
-      <Toolbar/>
+      <Toolbar>
+        <Typography variant="h6" noWrap component="div" fontFamily="">
+          Jibber Jabber
+        </Typography>
+      </Toolbar>
       <List>
-        {items.map(({path, title, iconComponent}) => {
-          const Icon = iconComponent
-          return (
-            <ListItem key={path} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <Icon/>
-                </ListItemIcon>
-                <ListItemText primary={title}/>
-              </ListItemButton>
-            </ListItem>
-          )
-        })}
+        {items.map((item) => <SideBarItem key={item.path} {...item}/>)}
       </List>
     </>
   )

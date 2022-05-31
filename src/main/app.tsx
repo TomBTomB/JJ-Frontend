@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { DataContainer, DataContext } from '../data/dataContext'
 import { MainRouter } from './mainRouter'
 import { createDataContainer } from './dataContainerInitializer'
+import { UserLoader } from './userLoader'
 
 export const App = () => {
   const [dataContainer, setDataContainer] = useState<DataContainer | undefined>()
@@ -20,7 +21,9 @@ export const App = () => {
   return (
     <DataContext.Provider value={dataContainer}>
       <BrowserRouter>
-        <MainRouter/>
+        <UserLoader>
+          <MainRouter/>
+        </UserLoader>
       </BrowserRouter>
     </DataContext.Provider>
   )
