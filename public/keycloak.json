@@ -1,0 +1,8 @@
+{
+  "realm": "Jibber-Jabber",
+  "auth-server-url": "http://localhost:8084/auth",
+  "ssl-required": "external",
+  "resource": "jj-frontend",
+  "public-client": true,
+  "confidential-port": 0
+}
