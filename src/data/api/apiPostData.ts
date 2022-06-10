@@ -20,6 +20,10 @@ export class ApiPostData implements PostData{
         return postAxios.post<NewPost, FullPost>(`/${postId}`, answer)
     }
 
+    getPostsByUser(userId: string): Promise<Post[]> {
+        return postAxios.get("/user");
+    }
+
 }
 
 const postAxios = axios.create(
