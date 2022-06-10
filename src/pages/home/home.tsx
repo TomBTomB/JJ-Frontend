@@ -1,12 +1,13 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 
 import { Post } from '../../data/posts'
-import { getUserData, User } from '../../data/users'
 import { Feed } from '../../components/feed'
 import { usePostData } from '../../data/dataContext'
 import { Loading } from '../../components/loading'
 import { MainFrame } from '../../components/mainFrame'
 import { UserContext } from '../../components/contexts/userContext'
+import { CreatePostCard } from '../../components/createPostCard'
+import { Container } from '@mui/material'
 
 type HomeState =
   | {
@@ -48,7 +49,11 @@ export const Home = () => {
 
   return (
     <MainFrame title="Home">
-      <Feed posts={posts} onUserPost={handleCreatePost}/>
+      <Container>
+        <CreatePostCard buttonMessage="Post it!" placeholder="What's happening?" onPost={handleCreatePost}/>
+
+        <Feed posts={posts}/>
+      </Container>
     </MainFrame>
   )
 }

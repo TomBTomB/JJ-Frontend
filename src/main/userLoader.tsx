@@ -1,7 +1,10 @@
 import React, { ReactNode, useEffect, useState } from 'react'
-import { getUserData, User } from '../data/users'
+import { User } from '../data/users'
 import { Loading } from '../components/loading'
 import { UserContext } from '../components/contexts/userContext'
+import { useUserData } from '../data/dataContext'
+import { Unauthenticated } from '../components/unauthenticated'
+import { isNotUndefined } from '../utils/undefined'
 
 export type UserLoaderProps = {
   children: ReactNode
@@ -9,28 +12,40 @@ export type UserLoaderProps = {
 
 type UserLoaderState =
   | {
-  loaded: false
+  status: 'loading'
 }
   | {
-  loaded: true
+  status: 'unauthenticated'
+}
+  | {
+  status: 'loaded'
   user: User
 }
 
 export const UserLoader = ({children}: UserLoaderProps) => {
-  const [state, setState] = useState<UserLoaderState>({loaded: false})
+  const userData = useUserData()
+
+  const [state, setState] = useState<UserLoaderState>({status: 'loading'})
 
   useEffect(() => {
-    getUserData().then((user) => {
-      setState({loaded: true, user})
+    userData.getCurrentUser().then((user) => {
+      if (isNotUndefined(user))
+        setState({status: 'loaded', user})
+      else
+        setState({status: 'unauthenticated'})
     })
   }, [])
 
-  if (!state.loaded)
-    return <Loading/>
-
-  return (
-    <UserContext.Provider value={state.user}>
-      {children}
-    </UserContext.Provider>
-  )
+  switch (state.status) {
+    case 'loading':
+      return <Loading/>
+    case 'unauthenticated':
+      return <Unauthenticated/>
+    case 'loaded':
+      return (
+        <UserContext.Provider value={state.user}>
+          {children}
+        </UserContext.Provider>
+      )
+  }
 }

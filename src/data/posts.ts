@@ -17,7 +17,10 @@ export interface PostData {
 
   getFullPostById(id: string): Promise<FullPost | undefined>
 
+  getPostsByUser(userId: string): Promise<Post[]>
+
   createPost(post: NewPost): Promise<Post>
 
   answerPost(postId: string, answer: NewPost): Promise<FullPost>
+
 }

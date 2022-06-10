@@ -27,5 +27,8 @@ export class LocalDataStorage<T> {
       .filter(isNotNull)
       .map(value => JSON.parse(value))
 
+  getAllByPredicate = (predicate: (t: T) => boolean): T[] =>
+    this.getAll().filter(predicate)
+
   private createKey = (id: string): string => this.type + this.keySeparator + id
 }

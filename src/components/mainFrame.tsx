@@ -1,11 +1,11 @@
-import React, { ReactElement } from 'react'
+import React, { ReactNode } from 'react'
 import { TopBar } from './topBar'
 import { Box } from '@mui/material'
 import { SideBar } from './sideBar'
 import Toolbar from '@mui/material/Toolbar'
 
 export type MainFrameProps = {
-  children: ReactElement
+  children: ReactNode
   title: string
 }
 

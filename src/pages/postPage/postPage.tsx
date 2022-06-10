@@ -1,27 +1,15 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback } from 'react'
 import { FullPost } from '../../data/posts'
 import { usePostData } from '../../data/dataContext'
-import { Loading } from '../../components/loading'
-import { NotFound } from '../../components/notFound'
 import { useParams } from 'react-router-dom'
 import { PostDetail } from '../../components/postDetail'
 import { MainFrame } from '../../components/mainFrame'
 import { useUserContext } from '../../components/contexts/userContext'
+import { useLoadElementById } from '../../components/hooks/useLoadElementById'
+import { LoadableElement } from '../../components/loadableElement'
 
 export type PostPageParams = {
   postId: string
-}
-
-type PostPageState =
-  | {
-  loadingState: 'loading'
-}
-  | {
-  loadingState: 'post-not-found'
-}
-  | {
-  loadingState: 'loaded'
-  post: FullPost
 }
 
 export const PostPage = () => {
@@ -29,48 +17,25 @@ export const PostPage = () => {
   const user = useUserContext()
 
   const postData = usePostData()
+  const getFullPostById = useCallback(postData.getFullPostById.bind(postData), [postData])
 
-  const [state, setState] = useState<PostPageState>({loadingState: 'loading'})
-
-  const loadPost = useCallback(() => {
-    if (postId === undefined)
-      setState({loadingState: 'post-not-found'})
-    else
-      postData.getFullPostById(postId).then(post => {
-        if (post === undefined)
-          setState({loadingState: 'post-not-found'})
-        else
-          setState({loadingState: 'loaded', post})
-      })
-  }, [state, postId])
-
-  useEffect(() => loadPost(), [])
+  const {state, load} = useLoadElementById<FullPost>(postId, getFullPostById)
 
   const handlePostAnswer = useCallback((postText: string) => {
-    if (state.loadingState === 'loaded') {
-      postData.answerPost(state.post.id, {user, text: postText})
-        .then(() => loadPost())
+    if (state.status === 'loaded') {
+      postData.answerPost(state.value.id, {user, text: postText})
+        .then(() => load())
         .catch(error => console.error('Error while creating new post', error))
     }
   }, [state, postData])
 
-  const content = useMemo(() => {
-    switch (state.loadingState) {
-      case 'loading':
-        return <Loading/>
-      case 'post-not-found':
-        return <NotFound/>
-      case 'loaded':
-        const {post} = state
-        return (
-          <PostDetail post={post} onPostAnswer={handlePostAnswer}/>
-        )
-    }
-  }, [state])
+  const renderPost = useCallback((post: FullPost) => (
+    <PostDetail post={post} onPostAnswer={handlePostAnswer}/>
+  ), [handlePostAnswer])
 
   return (
     <MainFrame title="Post">
-      {content}
+      <LoadableElement state={state} renderValue={renderPost}/>
     </MainFrame>
   )
 }

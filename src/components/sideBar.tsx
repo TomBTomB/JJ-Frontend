@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { Home, Person } from '@mui/icons-material'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { useNavigate } from 'react-router-dom'
+import { useUserContext } from './contexts/userContext'
 
 export type SideBarProps = {
   mobileOpen: boolean
@@ -16,7 +17,7 @@ export type ItemProps = {
   iconComponent: React.ComponentType,
 }
 
-const items: ItemProps[] = [
+const createItems = (userId: string): ItemProps[] => [
   {
     title: 'Home',
     path: '/',
@@ -24,7 +25,7 @@ const items: ItemProps[] = [
   },
   {
     title: 'Profile',
-    path: '/profile',
+    path: '/users/' + userId,
     iconComponent: Person,
   },
 ]
@@ -51,6 +52,9 @@ const SideBarItem = ({path, title, iconComponent}: ItemProps) => {
 }
 
 export const SideBar = ({mobileOpen, onSideBarToggle}: SideBarProps) => {
+  const user = useUserContext()
+  const items = useMemo(() => createItems(user.id), [user.id])
+
   const drawer = (
     <>
       <Toolbar>
