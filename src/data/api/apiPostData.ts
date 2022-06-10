@@ -9,7 +9,7 @@ export class ApiPostData implements PostData{
     }
 
     getFullPostById(id: string): Promise<FullPost | undefined> {
-        return postAxios.get(`/${id}`);
+        return postAxios.get(`/${id}`).then(res => res.data);
     }
 
     getFeedPosts(): Promise<Post[]> {
