@@ -14,6 +14,14 @@ export class ApiUserData implements UserData{
     searchUser(searchString: string): Promise<User[]> {
         return userAxios.get(`/search/${searchString}`).then(res => res.data);
     }
+
+    isFollowed(userId: string): Promise<boolean | undefined> {
+        return Promise.resolve(false);
+    }
+
+    toggleFollow(userId: string): Promise<void> {
+        return Promise.resolve(undefined);
+    }
 }
 
 const userAxios = axios.create(
