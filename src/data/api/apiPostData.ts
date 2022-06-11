@@ -21,7 +21,7 @@ export class ApiPostData implements PostData{
     }
 
     getPostsByUser(userId: string): Promise<Post[]> {
-        return postAxios.get("/user");
+        return postAxios.get(`/user/${userId}`).then(res => res.data.content);
     }
 
 }
@@ -48,11 +48,3 @@ postAxios.interceptors.request.use((config) => {
         return UserService.updateToken(cb);
     }
 });
-
-export const getPostsFor = async (userId: string) => {
-    return await postAxios.get(`/user/${userId}`)
-}
-
-export const deletePost = async (postId: string) => {
-    return await postAxios.delete(`/${postId}`)
-}
