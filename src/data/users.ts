@@ -11,5 +11,7 @@ export interface UserData {
 
   getUserById(userId: string): Promise<User | undefined>
 
-  searchUser(criteria: string): Promise<User[]>
+  isFollowed(userId: string): Promise<boolean | undefined>
+
+  toggleFollow(userId: string): Promise<void>
 }
