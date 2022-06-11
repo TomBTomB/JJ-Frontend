@@ -16,11 +16,11 @@ export class ApiUserData implements UserData{
     }
 
     isFollowed(userId: string): Promise<boolean | undefined> {
-        return Promise.resolve(false);
+        return followAxios.get(`/${userId}`).then(res => res.data);
     }
 
     toggleFollow(userId: string): Promise<void> {
-        return Promise.resolve(undefined);
+        return followAxios.post(`/${userId}`);
     }
 }
 
@@ -35,7 +35,29 @@ const userAxios = axios.create(
     }
 )
 
+const followAxios = axios.create(
+    {
+        baseURL: "http://localhost:8084/follow",
+        headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "crossDomain": true
+        }
+    }
+)
+
 userAxios.interceptors.request.use((config) => {
+    if (UserService.isLoggedIn()) {
+        const cb = () => {
+            // @ts-ignore
+            config.headers.Authorization = `Bearer ${UserService.getToken()}`;
+            return Promise.resolve(config);
+        };
+        return UserService.updateToken(cb);
+    }
+});
+
+followAxios.interceptors.request.use((config) => {
     if (UserService.isLoggedIn()) {
         const cb = () => {
             // @ts-ignore
