@@ -28,7 +28,7 @@ export class ApiPostData implements PostData{
 
 const postAxios = axios.create(
     {
-        baseURL: "http://localhost:8084/post",
+        baseURL: "http://20.70.238.167/post",
         headers: {
             // "Authorization": "Bearer " + UserService.getToken(),
             "Content-Type": "application/json",
