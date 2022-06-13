@@ -38,3 +38,13 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Connect to VM
+        run: ssh -i ${{ secrets.JJ_DEV_KEY }} TomBTomB@${{ secrets.JJ_DEV_IP }}
+
+      - name: Update docker images
+        run: |
+          cd JJ-Backend
+          sudo docker compose stop
+          sudo docker compose pull
+          sudo docker compose up
