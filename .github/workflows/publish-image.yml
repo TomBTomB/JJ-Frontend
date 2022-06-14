@@ -42,6 +42,7 @@ jobs:
       - name: Connect to VM
         run: |
           echo "$SSH_KEY" > JJ_DEV_KEY.pem
+          chmod 400 JJ_DEV_KEY.pem
           ssh -tt -i JJ_DEV_KEY.pem TomBTomB@${{ secrets.JJ_DEV_IP }}
         env:
           SSH_KEY: ${{ secrets.JJ_DEV_KEY }}
