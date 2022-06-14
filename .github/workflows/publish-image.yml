@@ -44,7 +44,7 @@ jobs:
           echo "$HOSTS" > known_hosts
           echo "$SSH_KEY" > JJ_DEV_KEY.pem
           chmod 400 JJ_DEV_KEY.pem
-          ssh -i JJ_DEV_KEY.pem -o UserKnownHostsFile=./known_hosts -tt TomBTomB@${{ secrets.JJ_DEV_IP }}
+          ssh -i JJ_DEV_KEY.pem -o UserKnownHostsFile=./known_hosts TomBTomB@${{ secrets.JJ_DEV_IP }}
           cd JJ-Backend
           sudo docker compose stop
           sudo docker compose pull
