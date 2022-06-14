@@ -39,19 +39,17 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Connect to VM
+      - name: Connect to VM and update Docker Images
         run: |
           echo "$HOSTS" > known_hosts
           echo "$SSH_KEY" > JJ_DEV_KEY.pem
           chmod 400 JJ_DEV_KEY.pem
           ssh -i JJ_DEV_KEY.pem -o UserKnownHostsFile=./known_hosts -tt TomBTomB@${{ secrets.JJ_DEV_IP }}
-        env:
-          SSH_KEY: ${{ secrets.JJ_DEV_KEY }}
-          HOSTS: ${{ secrets.JJ_DEV_HOSTS }}
-
-      - name: Update docker images
-        run: |
           cd JJ-Backend
           sudo docker compose stop
           sudo docker compose pull
           sudo docker compose up
+          exit
+        env:
+          SSH_KEY: ${{ secrets.JJ_DEV_KEY }}
+          HOSTS: ${{ secrets.JJ_DEV_HOSTS }}
