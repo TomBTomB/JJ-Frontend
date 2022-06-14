@@ -26,7 +26,7 @@ export class ApiUserData implements UserData{
 
 const userAxios = axios.create(
     {
-        baseURL: "http://20.70.238.167/user",
+        baseURL: "https://jjtombtomb.ml/user",
         headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
@@ -37,7 +37,7 @@ const userAxios = axios.create(
 
 const followAxios = axios.create(
     {
-        baseURL: "http://20.70.238.167/follow",
+        baseURL: "https://jjtombtomb.ml/follow",
         headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
