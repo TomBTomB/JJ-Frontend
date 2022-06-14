@@ -48,5 +48,5 @@ jobs:
             sudo docker compose pull
             sudo docker compose up
           host: ${{ secrets.JJ_DEV_HOSTS }}
-          user: TomBTomB
-          key: ${{ secrets.JJ_DEV_KEY}}
+          username: TomBTomB
+          privateKey: ${{ secrets.JJ_DEV_KEY}}
