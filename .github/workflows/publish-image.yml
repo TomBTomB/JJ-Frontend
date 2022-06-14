@@ -39,19 +39,14 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Connect to VM
-        run: |
-          echo "$HOSTS" > known_hosts
-          echo "$SSH_KEY" > JJ_DEV_KEY.pem
-          chmod 400 JJ_DEV_KEY.pem
-          ssh -i JJ_DEV_KEY.pem -o UserKnownHostsFile=./known_hosts TomBTomB@${{ secrets.JJ_DEV_IP }}
-        env:
-          SSH_KEY: ${{ secrets.JJ_DEV_KEY }}
-          HOSTS: ${{ secrets.JJ_DEV_HOSTS }}
-      - name: Update Docker images
-        run: |
-          cd JJ-Backend
-          sudo docker compose stop
-          sudo docker compose pull
-          sudo docker compose up
-          exit
+      - name: Update server
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            cd JJ-Backend
+            sudo docker compose stop
+            sudo docker compose pull
+            sudo docker compose up
+          host: ${{ secrets.JJ_DEV_HOSTS }}
+          user: TomBTomB
+          key: ${{ secrets.JJ_DEV_KEY}}
