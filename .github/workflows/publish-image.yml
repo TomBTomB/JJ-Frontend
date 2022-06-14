@@ -40,7 +40,11 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Connect to VM
-        run: ssh -i ${{ secrets.JJ_DEV_KEY }} TomBTomB@${{ secrets.JJ_DEV_IP }}
+        run: |
+          echo "$SSH_KEY" > JJ_DEV_KEY.pem
+          ssh -i JJ_DEV_KEY.pem TomBTomB@${{ secrets.JJ_DEV_IP }}
+        env:
+          SSH_KEY: ${{ secrets.JJ_DEV_KEY }}
 
       - name: Update docker images
         run: |
