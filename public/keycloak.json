@@ -1,6 +1,6 @@
 {
   "realm": "Jibber-Jabber",
-  "auth-server-url": "https://jjtombtomb.ml/auth",
+  "auth-server-url": "https://jjtbtb.ml/auth",
   "ssl-required": "external",
   "resource": "jj-frontend",
   "public-client": true,
