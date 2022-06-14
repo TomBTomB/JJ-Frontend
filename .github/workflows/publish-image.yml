@@ -40,13 +40,13 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Update server
-        uses: fifsky/ssh-action@master
+        uses: appleboy/ssh-action@master
         with:
-          command: |
+          host: ${{ secrets.JJ_DEV_HOSTS }}
+          username: TomBTomB
+          key: ${{ secrets.JJ_DEV_KEY }}
+          script: |
             cd JJ-Backend
             sudo docker compose stop
             sudo docker compose pull
             sudo docker compose up
-          host: ${{ secrets.JJ_DEV_HOSTS }}
-          username: TomBTomB
-          privateKey: ${{ secrets.JJ_DEV_KEY}}
